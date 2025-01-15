@@ -6,7 +6,7 @@
 /*   By: gade-oli <gade-oli@student.42madrid.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:06:21 by gade-oli          #+#    #+#             */
-/*   Updated: 2024/12/19 17:07:12 by gade-oli         ###   ########.fr       */
+/*   Updated: 2025/01/15 17:56:57 by gade-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,20 @@ void *semen(void *ex)
 	return (NULL);
 }
 
+t_philo	*init_philo(int ms_sleep, int ms_think, int ms_eat)
+{
+	t_philo	*p;
+
+	p = malloc(sizeof(t_philo));
+	if (!p)
+		return (NULL);
+	p->state = SLEEP;
+	p->ms_eat = ms_eat;
+	p->ms_sleep = ms_sleep;
+	p->ms_think = ms_think;
+	return (p);
+}
+
 t_list	*init_threads(int n, int ms_sleep, int ms_think, int ms_eat)
 {
 	int	i;
@@ -39,20 +53,6 @@ t_list	*init_threads(int n, int ms_sleep, int ms_think, int ms_eat)
 		i++;
 	}
 	return (list);
-}
-
-t_philo	*init_philo(int ms_sleep, int ms_think, int ms_eat)
-{
-	t_philo	*p;
-
-	p = malloc(sizeof(t_philo));
-	if (!p)
-		return (NULL);
-	p->state = SLEEP;
-	p->ms_eat = ms_eat;
-	p->ms_sleep = ms_sleep;
-	p->ms_think = ms_think;
-	return (p);
 }
 
 int main(void)

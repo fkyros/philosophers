@@ -6,7 +6,7 @@
 #    By: gade-oli <gade-oli@student.42madrid.c      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/29 18:28:42 by gade-oli          #+#    #+#              #
-#    Updated: 2024/12/14 20:22:26 by gade-oli         ###   ########.fr        #
+#    Updated: 2025/01/15 18:52:47 by gade-oli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,8 +25,8 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize-address
 
-#LIBFT_DIR = megalibft/
-#LIBFT = $(LIBFT_DIR)megalibft.a
+LIBFT_DIR = megalibft/
+LIBFT = $(LIBFT_DIR)megalibft.a
 
 SRC = src/main.c 
 
