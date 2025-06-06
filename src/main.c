@@ -6,25 +6,11 @@
 /*   By: gade-oli <gade-oli@student.42madrid.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:06:21 by gade-oli          #+#    #+#             */
-/*   Updated: 2025/01/15 17:56:57 by gade-oli         ###   ########.fr       */
+/*   Updated: 2025/06/06 19:33:37 by gade-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include "../inc/philosophers.h"
-
-int	a = 0;
-
-void *semen(void *ex)
-{
-	if (!a)
-		printf("no hay semen!!!\n");
-	pthread_mutex_lock(ex);
-	a++;
-	printf("semen = %d\n", a);
-	pthread_mutex_unlock(ex);
-	return (NULL);
-}
 
 t_philo	*init_philo(int ms_sleep, int ms_think, int ms_eat)
 {
@@ -40,34 +26,60 @@ t_philo	*init_philo(int ms_sleep, int ms_think, int ms_eat)
 	return (p);
 }
 
-t_list	*init_threads(int n, int ms_sleep, int ms_think, int ms_eat)
+t_context	*init_context(int argc, char **argv)
 {
-	int	i;
-	t_list	*list;
+	t_context	*context;
 
-	list = ft_lstnew(init_philo(ms_sleep, ms_think, ms_eat));
-	i = 1;
-	while (i < n)
-	{
-		ft_lstadd_back(&list, ft_lstnew(init_philo(ms_sleep, ms_think, ms_eat)));
-		i++;
-	}
-	return (list);
+	context = malloc(sizeof(t_context));
+	if (!context)
+		return (NULL);
+	context->n_philos = ft_atoi(argv[1]);
+	context->ms_total_die = ft_atoi(argv[2]);
+	context->ms_eat = ft_atoi(argv[3]);
+	context->ms_sleep = ft_atoi(argv[4]);
+	context->ms_think = context->ms_total_die - context->ms_eat - context->ms_sleep;
+	if (argc == 5)
+		context->n_intakes = ft_atoi(argv[5]);
+	//malloc forks and philos init
+	return (context);
 }
 
-int main(void)
-{
-	pthread_mutex_t	ex;
-	pthread_t		t1;
-	pthread_t		t2;
+//TODO: func to destroy mutexes and join threads
 
-	pthread_mutex_init(&ex, NULL);
-	if (pthread_create(&t1, NULL, &semen, &ex))
+// returns 1 if the given input as char* is NOT a natural number (>0)
+int	is_nann(char *str)
+{
+	// TODO
+	return (0);
+}
+
+int	check_philo_input(int argc, char **argv)
+{
+	int	i;
+
+	if (argc < 5 || argc > 6)
+	{
+		printf("Usage: ./philo number_of_philosophers time_to_die time_to_eat \
+			time_to_sleep [number_of_times_each_philosopher_must_eat]");
 		return (1);
-	if (pthread_create(&t2, NULL, &semen, &ex))
+	}
+	i = 1;
+	while (i < argc)
+	{
+		if (is_nann(argv[i]))
+		{
+			printf("Error: parameter %d with value %s must be a natural number", i, argv[i]);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+int	main(int argc, char **argv)
+{
+	if (check_philo_input(argc, argv))
 		return (1);
-	pthread_join(t1, NULL);
-	pthread_join(t2, NULL);
-	pthread_mutex_destroy(&ex);
+	init_context(argc, argv);
 	return (0);
 }

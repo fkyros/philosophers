@@ -6,7 +6,7 @@
 #    By: gade-oli <gade-oli@student.42madrid.c      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/29 18:28:42 by gade-oli          #+#    #+#              #
-#    Updated: 2025/01/15 18:52:47 by gade-oli         ###   ########.fr        #
+#    Updated: 2025/06/06 19:26:25 by gade-oli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,10 +25,7 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize-address
 
-LIBFT_DIR = megalibft/
-LIBFT = $(LIBFT_DIR)megalibft.a
-
-SRC = src/main.c 
+SRC = src/main.c src/ft_atoi.c
 
 BIN = $(SRC:src/%.c=bin/%.o)
 
@@ -36,26 +33,20 @@ BIN = $(SRC:src/%.c=bin/%.o)
 
 all: $(NAME)
 
-$(LIBFT):
-	@echo $(BLUE)"compiling libft"$(RESET)
-	@make --directory=$(LIBFT_DIR) 
-
 bin/%.o: src/%.c
 	@echo $(BLUE)"compiling binaries..."$(RESET)
 	@mkdir -p $(@D)
 	$(CC) -c $< -o $@ $(CFLAGS)
 
-$(NAME): $(LIBFT) $(BIN)
-	$(CC) $(BIN) $(LIBFT) -o $@ $(CFLAGS)
+$(NAME): $(BIN)
+	$(CC) $(BIN) -o $@ $(CFLAGS)
 	@echo $(GREEN)"$(NAME) compiled!"$(RESET)
 
 clean:
-	@make clean --directory=$(LIBFT_DIR) 
 	rm -rf $(BIN)
 	@echo $(RED)"binaries deleted"$(RESET)
 
 fclean:	clean
-	@make fclean --directory=$(LIBFT_DIR) 
 	rm -rf $(NAME)
 	@echo $(RED)"$(NAME) deleted!"$(RESET)
 
