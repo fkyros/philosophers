@@ -6,7 +6,7 @@
 #    By: gade-oli <gade-oli@student.42madrid.c      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/29 18:28:42 by gade-oli          #+#    #+#              #
-#    Updated: 2025/06/06 19:26:25 by gade-oli         ###   ########.fr        #
+#    Updated: 2025/06/07 13:50:09 by gade-oli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize-address
 
-SRC = src/main.c src/ft_atoi.c
+SRC = src/main.c src/utils.c
 
 BIN = $(SRC:src/%.c=bin/%.o)
 
