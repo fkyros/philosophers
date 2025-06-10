@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gade-oli <gade-oli@student.42madrid.c      +#+  +:+       +#+        */
+/*   By: gade-oli <gade-oli@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:06:21 by gade-oli          #+#    #+#             */
-/*   Updated: 2025/06/09 20:53:53 by gade-oli         ###   ########.fr       */
+/*   Updated: 2025/06/10 21:38:56 by gade-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ int	main(int argc, char **argv)
 	if (check_philo_input(argc, argv))
 		return (1);
 	context = init_context(argc, argv);
-	//free context OR destroy everything
+	// TODO: include fifth argument behaviour to finish simulation
+	launch_philos(context);
 	clear_context(context);
-	free(context);
 	return (0);
 }

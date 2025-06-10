@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabri <gabri@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gade-oli <gade-oli@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 16:00:42 by gade-oli          #+#    #+#             */
-/*   Updated: 2025/06/10 18:34:09 by gabri            ###   ########.fr       */
+/*   Updated: 2025/06/10 21:40:35 by gade-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/time.h>
+# include <unistd.h>
 
 enum	e_state
 {
@@ -29,6 +30,7 @@ enum	e_state
 
 typedef struct s_philo
 {
+	pthread_t		thread;
 	enum e_state	state;
 	int				id;
 	pthread_mutex_t	*l_fork_lock; //all pointing to the real context source
@@ -39,9 +41,7 @@ typedef struct s_philo
 
 typedef struct s_context
 {
-	pthread_t		*threads;
 	t_philo			*philos;
-	pthread_mutex_t	output; //protect the stdout
 	pthread_mutex_t	*fork_locks;
 	int				*forks;
 	int				n_philos;
@@ -50,12 +50,17 @@ typedef struct s_context
 	int				ms_sleep;
 	int				ms_think;
 	int				n_intakes;
-	long			start;
+	long			start_ts;
+	pthread_mutex_t	output; //protect the stdout
+	pthread_mutex_t	finish_lock;
+	int				finish_flag; //for fifth param
 }	t_context;
 
 // async.c
 t_context	*init_context(int argc, char **argv);
 void		clear_context(t_context *context);
+void		launch_philos(t_context *context);
+void		finish_philos(t_context *context);
 
 // routine.c
 void	*routine(void *arg);
