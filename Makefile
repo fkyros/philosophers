@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: gade-oli <gade-oli@student.42madrid.c      +#+  +:+       +#+         #
+#    By: gade-oli <gade-oli@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/29 18:28:42 by gade-oli          #+#    #+#              #
-#    Updated: 2025/06/07 13:50:09 by gade-oli         ###   ########.fr        #
+#    Updated: 2025/06/10 21:52:19 by gade-oli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize-address
 
-SRC = src/main.c src/utils.c src/parser.c src/routine.c src/async.c
+SRC = src/main.c src/utils.c src/parser.c src/routines.c src/async.c
 
 BIN = $(SRC:src/%.c=bin/%.o)
 
