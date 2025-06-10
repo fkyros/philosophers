@@ -12,45 +12,17 @@
 
 #include "../inc/philosophers.h"
 
-static int	ft_isspace(char c)
+long	ft_gettime(t_context *context)
 {
-	if (c == '\t' || c == '\n'
-		|| c == '\v' || c == '\f'
-		|| c == '\r' || c == ' ')
-		return (1);
-	return (0);
-}
+	struct timeval	time;
+	int		res;
+	long		ms;
 
-int	ft_atoi(const char *nptr)
-{
-	int	res;
-	int	i;
-	int	sign;
-
-	sign = 1;
-	i = 0;
-	res = 0;
-	while (ft_isspace(nptr[i]))
-		i++;
-	if (nptr[i] == '-')
-	{
-		sign *= -1;
-		i++;
-	}
-	else if (nptr[i] == '+')
-		i++;
-	while (ft_isdigit(nptr[i]))
-	{
-		res *= 10;
-		res += (nptr[i] - '0');
-		i++;
-	}
-	return (res * sign);
-}
-
-int	ft_isdigit(int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
+	res = gettimeofday(&time, NULL);
+	if (res == -1)
+		return (-1);
+	if (!context)
+		return (time.tv_sec * 1000);
+	ms = (time.tv_sec - context->start) * 1000;
+	return (ms);
 }

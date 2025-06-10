@@ -25,7 +25,7 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize-address
 
-SRC = src/main.c src/utils.c
+SRC = src/main.c src/utils.c src/parser.c src/routine.c src/async.c
 
 BIN = $(SRC:src/%.c=bin/%.o)
 
