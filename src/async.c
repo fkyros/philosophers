@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   async.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gade-oli <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/11 19:27:34 by gade-oli          #+#    #+#             */
+/*   Updated: 2025/06/11 20:28:06 by gade-oli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/philosophers.h"
 
 static void	init_mutex(t_context *context)
@@ -18,6 +30,9 @@ static void	init_mutex(t_context *context)
 		pthread_mutex_init(&context->fork_locks[i], NULL);
 		i++;
 	}
+	pthread_mutex_init(&context->output_lock, NULL);
+	pthread_mutex_init(&context->finish_lock, NULL);
+	pthread_mutex_init(&context->dead_lock, NULL);
 }
 
 t_context	*init_context(int argc, char **argv)
@@ -34,8 +49,6 @@ t_context	*init_context(int argc, char **argv)
 	context->ms_ttd = ft_atoi(argv[2]);
 	context->ms_eat = ft_atoi(argv[3]);
 	context->ms_sleep = ft_atoi(argv[4]);
-	context->ms_think = context->ms_ttd - context->ms_eat
-			- context->ms_sleep;
 	if (argc == 6)
 		context->n_intakes = ft_atoi(argv[5]);
 	context->start_ts = ft_gettime();
@@ -65,24 +78,23 @@ void	create_philos(t_context *context)
 		philos[i].last_meal_ts = ft_gettime() + context->ms_ttd;
 		i++;
 	}
-	context->philos = philos; //TODO: nido de bugs y sigsevs cruzados
-	philos->context = context; //TODO: nido de bugs y sigsevs cruzados
+	philos->context = context;
 }
 
 // TODO: create monitor to check dead philos?
-void	simulation(t_philo *philos)
+void	simulation(t_context *context)
 {
 	int	i;
 
 	i = 0;
-	while (i < philos->context->n_philos)
+	while (i < context->n_philos)
 	{
 		pthread_create(&philos[i].thread, NULL, routine, &philos[i]);
 		i++;
 	}
 }
 
-static void		finish_philos(t_context *context)
+static void	finish_philos(t_context *context)
 {
 	int	i;
 
@@ -99,7 +111,8 @@ static void		finish_philos(t_context *context)
 void	clear_context(t_context *context)
 {
 	finish_philos(context);
-	pthread_mutex_destroy(&context->output);
+	pthread_mutex_destroy(&context->output_lock);
 	pthread_mutex_destroy(&context->finish_lock);
+	pthread_mutex_destroy(&context->dead_lock);
 	free(context);
 }

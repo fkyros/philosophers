@@ -6,7 +6,7 @@
 /*   By: gade-oli <gade-oli@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 16:00:42 by gade-oli          #+#    #+#             */
-/*   Updated: 2025/06/11 00:39:15 by gade-oli         ###   ########.fr       */
+/*   Updated: 2025/06/11 19:15:12 by gade-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,31 +31,31 @@ enum	e_state
 typedef struct s_philo
 {
 	pthread_t		thread;
-	enum e_state	state;
-	int				id;
-	pthread_mutex_t	*l_fork_lock; //all pointing to the real context source
-	pthread_mutex_t	*r_fork_lock;
-	int				l_fork;
-	int				r_fork;
+	enum e_state		state;
+	int			id;
+	pthread_mutex_t		*l_fork_lock; //all pointing to the real context source
+	pthread_mutex_t		*r_fork_lock;
+	int			l_fork;
+	int			r_fork;
 	long			last_meal_ts;
 	struct s_context	*context;
 }	t_philo;
 
 typedef struct s_context
 {
-	pthread_mutex_t	*fork_locks;
-	int				*forks;
-	int				n_philos;
-	int				ms_ttd;
-	int				ms_eat;
-	int				ms_sleep;
-	int				ms_think;
-	int				n_intakes;
+	pthread_mutex_t		*fork_locks;
+	int			*forks;
+	int			n_philos;
+	int			ms_ttd;
+	int			ms_eat;
+	int			ms_sleep;
+	int			n_intakes;
 	long			start_ts;
-	pthread_mutex_t	output; //protect the stdout
-	pthread_mutex_t	finish_lock;
-	int				finish_flag; //for fifth param
-	t_philo			*philos;
+	pthread_mutex_t		output_lock; //protect the stdout
+	pthread_mutex_t		finish_lock; //for fifth param
+	int			n_eats;	
+	pthread_mutex_t		dead_lock; //finish execution if philo
+	int			philo_dead;
 }	t_context;
 
 // async.c

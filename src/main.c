@@ -6,7 +6,7 @@
 /*   By: gade-oli <gade-oli@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:06:21 by gade-oli          #+#    #+#             */
-/*   Updated: 2025/06/11 00:39:11 by gade-oli         ###   ########.fr       */
+/*   Updated: 2025/06/11 19:30:13 by gade-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	main(int argc, char **argv)
 	context = init_context(argc, argv);
 	// TODO: include fifth argument behaviour to finish simulation
 	create_philos(context);
-	simulation(context->philos);
+	simulation(context);
 	clear_context(context);
 	return (0);
 }
