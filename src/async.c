@@ -6,7 +6,7 @@
 /*   By: gade-oli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 19:27:34 by gade-oli          #+#    #+#             */
-/*   Updated: 2025/06/11 20:28:06 by gade-oli         ###   ########.fr       */
+/*   Updated: 2025/06/13 15:33:50 by gade-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ t_context	*init_context(int argc, char **argv)
 	return (context);
 }
 
-void	create_philos(t_context *context)
+t_philo	*create_philos(t_context *context)
 {
 	int		i;
 	t_philo	*philos;
@@ -66,7 +66,7 @@ void	create_philos(t_context *context)
 	if (!philos)
 	{
 		write(STDERR_FILENO, "malloc error :(\n", 17);
-		return ;
+		return (NULL);
 	}
 	while (i < context->n_philos)
 	{
@@ -79,10 +79,11 @@ void	create_philos(t_context *context)
 		i++;
 	}
 	philos->context = context;
+	return (philos);
 }
 
 // TODO: create monitor to check dead philos?
-void	simulation(t_context *context)
+void	simulation(t_context *context, t_philo *philos)
 {
 	int	i;
 
@@ -94,23 +95,23 @@ void	simulation(t_context *context)
 	}
 }
 
-static void	finish_philos(t_context *context)
+static void	finish_philos(t_philo *philos, t_context *context)
 {
 	int	i;
 
 	i = 0;
 	while (i < context->n_philos)
 	{
-		pthread_join(context->philos[i].thread, NULL);
+		pthread_join(philos[i].thread, NULL);
 		pthread_mutex_destroy(&context->fork_locks[i]);
 		i++;
 	}
 }
 
 //TODO: func to destroy mutexes and join threads
-void	clear_context(t_context *context)
+void	clear_context(t_philo *philos, t_context *context)
 {
-	finish_philos(context);
+	finish_philos(philos, context);
 	pthread_mutex_destroy(&context->output_lock);
 	pthread_mutex_destroy(&context->finish_lock);
 	pthread_mutex_destroy(&context->dead_lock);

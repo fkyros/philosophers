@@ -6,7 +6,7 @@
 /*   By: gade-oli <gade-oli@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 16:00:42 by gade-oli          #+#    #+#             */
-/*   Updated: 2025/06/11 19:15:12 by gade-oli         ###   ########.fr       */
+/*   Updated: 2025/06/13 15:31:15 by gade-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ typedef struct s_context
 
 // async.c
 t_context	*init_context(int argc, char **argv);
-void		create_philos(t_context *context);
-void		simulation(t_philo *philos);
-void		clear_context(t_context *context);
+t_philo		*create_philos(t_context *context);
+void		simulation(t_context *context, t_philo *philos);
+void		clear_context(t_philo *philos, t_context *context);
 
 // routine.c
 void	*routine(void *arg);
