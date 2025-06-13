@@ -6,7 +6,7 @@
 /*   By: gade-oli <gade-oli@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 13:43:36 by gade-oli          #+#    #+#             */
-/*   Updated: 2025/06/11 00:26:49 by gade-oli         ###   ########.fr       */
+/*   Updated: 2025/06/13 17:28:37 by gade-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ long	ft_gettime(void)
 	long			ms;
 
 	gettimeofday(&time, NULL);
-	ms = time.tv_sec * 1000;
+	ms = time.tv_sec * 1000 + time.tv_usec / 1000;
 	return (ms);
 }
 
@@ -36,7 +36,7 @@ void	print_message(t_context *context, int id, enum e_state state, long time)
 {
 	if (!context)
 		return ;
-	pthread_mutex_lock(&context->output);
+	pthread_mutex_lock(&context->output_lock);
 	if (state == FORK)
 		printf("%ld %d has taken a fork\n", time, id);
 	if (state == EAT)
@@ -47,5 +47,5 @@ void	print_message(t_context *context, int id, enum e_state state, long time)
 		printf("%ld %d is thinking\n", time, id);
 	if (state == DEAD)
 		printf("%ld %d died\n", time, id);
-	pthread_mutex_unlock(&context->output);
+	pthread_mutex_unlock(&context->output_lock);
 }

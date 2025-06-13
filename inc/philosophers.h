@@ -6,7 +6,7 @@
 /*   By: gade-oli <gade-oli@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 16:00:42 by gade-oli          #+#    #+#             */
-/*   Updated: 2025/06/13 15:31:15 by gade-oli         ###   ########.fr       */
+/*   Updated: 2025/06/13 17:15:57 by gade-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ typedef struct s_context
 	int			n_intakes;
 	long			start_ts;
 	pthread_mutex_t		output_lock; //protect the stdout
-	pthread_mutex_t		finish_lock; //for fifth param
+	pthread_mutex_t		n_eats_lock; //for fifth param
 	int			n_eats;	
 	pthread_mutex_t		dead_lock; //finish execution if philo
 	int			philo_dead;
@@ -74,5 +74,6 @@ int	ft_atoi(const char *nptr);
 // utils.c
 long	ft_gettime(void);
 void	print_message(t_context *context, int id, enum e_state state, long time);
+void	ft_usleep(int time);
 
 #endif

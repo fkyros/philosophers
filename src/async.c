@@ -6,7 +6,7 @@
 /*   By: gade-oli <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 19:27:34 by gade-oli          #+#    #+#             */
-/*   Updated: 2025/06/13 15:33:50 by gade-oli         ###   ########.fr       */
+/*   Updated: 2025/06/13 17:08:50 by gade-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	init_mutex(t_context *context)
 		i++;
 	}
 	pthread_mutex_init(&context->output_lock, NULL);
-	pthread_mutex_init(&context->finish_lock, NULL);
+	pthread_mutex_init(&context->n_eats_lock, NULL);
 	pthread_mutex_init(&context->dead_lock, NULL);
 }
 
@@ -58,7 +58,7 @@ t_context	*init_context(int argc, char **argv)
 
 t_philo	*create_philos(t_context *context)
 {
-	int		i;
+	int	i;
 	t_philo	*philos;
 
 	i = 0;
@@ -76,9 +76,9 @@ t_philo	*create_philos(t_context *context)
 		if (i + 1 == context->n_philos)
 			philos[i].r_fork = 0;
 		philos[i].last_meal_ts = ft_gettime() + context->ms_ttd;
+		philos[i].context = context;
 		i++;
 	}
-	philos->context = context;
 	return (philos);
 }
 
@@ -113,7 +113,7 @@ void	clear_context(t_philo *philos, t_context *context)
 {
 	finish_philos(philos, context);
 	pthread_mutex_destroy(&context->output_lock);
-	pthread_mutex_destroy(&context->finish_lock);
+	pthread_mutex_destroy(&context->n_eats_lock);
 	pthread_mutex_destroy(&context->dead_lock);
 	free(context);
 }
