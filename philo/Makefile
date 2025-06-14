@@ -21,21 +21,20 @@ RESET   = '\033[0;0m'
 
 NAME = philo
 
-CC = gcc
+CC = cc
 
 CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize=thread
 
-SRC = src/main.c src/utils.c src/parser.c src/routines.c src/async.c src/async_handler.c
+SRC = main.c utils.c parser.c routines.c async.c async_handler.c
 
-BIN = $(SRC:src/%.c=bin/%.o)
+BIN = $(SRC:%.c=%.o)
 
 #recipes------------------------------------------------------------------------
 
 all: $(NAME)
 
-bin/%.o: src/%.c
+%.o: %.c
 	@echo $(BLUE)"compiling binaries..."$(RESET)
-	@mkdir -p $(@D)
 	$(CC) -c $< -o $@ $(CFLAGS)
 
 $(NAME): $(BIN)

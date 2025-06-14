@@ -125,7 +125,7 @@ void	clear_context(t_philo *philos, t_context *context)
 void	handle_one_philo(t_context *context)
 {
 	long	time;
-	
+
 	print_message(context, 1, THINK);
 	print_message(context, 1, FORK);
 	ft_usleep(context->ms_ttd, NULL);
