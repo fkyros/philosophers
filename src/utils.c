@@ -18,7 +18,7 @@ void	ft_usleep(int time, t_context *context)
 	long	start_time;
 
 	start_time = ft_gettime();
-	while (ft_gettime() - start_time < time && !check_finished(context))
+	while (!check_finished(context) && ft_gettime() - start_time < time)
 		usleep(SLEEP_PING_MS);
 	return ;
 }
@@ -33,13 +33,16 @@ long	ft_gettime(void)
 	return (ms);
 }
 
-void	print_message(t_context *context, int id, enum e_state state, long time)
+void	print_message(t_context *context, int id, enum e_state state)
 {
+	long	time;
+
 	if (!context)
 		return ;
 	pthread_mutex_lock(&context->output_lock);
 	if (!check_finished(context))
 	{
+		time = ft_gettime() - context->start_ts;
 		if (state == FORK)
 			printf("%ld %d has taken a fork\n", time, id);
 		if (state == EAT)

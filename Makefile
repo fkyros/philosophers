@@ -23,7 +23,7 @@ NAME = philo
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror -g -pthread -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize=thread
 
 SRC = src/main.c src/utils.c src/parser.c src/routines.c src/async.c src/async_handler.c
 

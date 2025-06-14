@@ -17,6 +17,7 @@ void	simulation(t_context *context, t_philo *philos)
 {
 	int	i;
 
+	context->start_ts = ft_gettime();
 	if (context->n_philos == 1)
 	{
 		handle_one_philo(context);
@@ -67,7 +68,7 @@ void	*check_death(void *args)
             pthread_mutex_unlock(&philos[i].dying_time_lock);
             i++;
         }
-		ft_usleep(500, NULL);
+		ft_usleep(SLEEP_PING_MS, context);
 	}
 	return (NULL);
 }

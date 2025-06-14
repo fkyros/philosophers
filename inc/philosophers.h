@@ -19,7 +19,7 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# define SLEEP_PING_MS 100
+# define SLEEP_PING_MS 500
 # define MS_FACTOR 1000
 
 enum	e_state
@@ -82,7 +82,7 @@ int			ft_atoi(const char *nptr);
 
 // utils.c
 long		ft_gettime(void);
-void		print_message(t_context *context, int id, enum e_state state, long time);
+void		print_message(t_context *context, int id, enum e_state state);
 void		ft_usleep(int time, t_context *context);
 void		*ft_calloc(size_t count, size_t size);
 
