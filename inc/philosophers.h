@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <sys/time.h>
 # include <unistd.h>
+# include <limits.h>
 
 # define SLEEP_PING_MS 500
 # define MS_FACTOR 1000
@@ -66,6 +67,7 @@ typedef struct s_context
 t_context	*init_context(int argc, char **argv);
 t_philo		*create_philos(t_context *context);
 void		clear_context(t_philo *philos, t_context *context);
+void		handle_one_philo(t_context *context);
 
 //async.c
 void		simulation(t_context *context, t_philo *philos);
@@ -74,11 +76,10 @@ int			check_finished(t_context *context);
 
 // routine.c
 void		*routine(void *arg);
-void		handle_one_philo(t_context *context);
 
 // parser.c
 int			check_philo_input(int argc, char **argv);
-int			ft_atoi(const char *nptr);
+long		ft_atoi(const char *nptr);
 
 // utils.c
 long		ft_gettime(void);

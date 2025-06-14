@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   async_handler.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gade-oli <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/14 22:44:40 by gade-oli          #+#    #+#             */
+/*   Updated: 2025/06/14 22:44:42 by gade-oli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/philosophers.h"
 
 static void	init_mutex_and_forks(t_context *context)
@@ -55,7 +67,7 @@ t_context	*init_context(int argc, char **argv)
 
 t_philo	*create_philos(t_context *context)
 {
-	int	i;
+	int		i;
 	t_philo	*philos;
 
 	i = 0;
@@ -72,9 +84,9 @@ t_philo	*create_philos(t_context *context)
 		philos[i].r_fork = i + 1;
 		if (i + 1 == context->n_philos)
 			philos[i].r_fork = 0;
-        philos[i].times_eaten = 0;
-        pthread_mutex_init(&philos[i].times_eaten_lock, NULL);
-        philos[i].next_dying_time = ft_gettime() + context->ms_ttd;
+		philos[i].times_eaten = 0;
+		pthread_mutex_init(&philos[i].times_eaten_lock, NULL);
+		philos[i].next_dying_time = ft_gettime() + context->ms_ttd;
 		pthread_mutex_init(&philos[i].dying_time_lock, NULL);
 		philos[i].context = context;
 		i++;
@@ -87,7 +99,7 @@ void	clear_context(t_philo *philos, t_context *context)
 	int	i;
 
 	i = 0;
-    pthread_join(context->death_thread, NULL);
+	pthread_join(context->death_thread, NULL);
 	while (i < context->n_philos)
 	{
 		pthread_join(philos[i].thread, NULL);
@@ -106,4 +118,14 @@ void	clear_context(t_philo *philos, t_context *context)
 	free(context->forks);
 	free(philos);
 	free(context);
+}
+
+// to avoid a dead lock with the death_thread, for a single philo 
+// we have to simulate its simulation 
+void	handle_one_philo(t_context *context)
+{
+	print_message(context, 1, THINK);
+	print_message(context, 1, FORK);
+	ft_usleep(context->ms_ttd, NULL);
+	print_message(context, 1, DEAD);
 }

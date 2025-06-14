@@ -18,11 +18,6 @@ static void	ft_sleep(t_philo *philo, t_context *context)
 	ft_usleep(context->ms_sleep, context);
 }
 
-static void	ft_think(t_philo *philo, t_context *context)
-{
-	print_message(context, philo->id, THINK);
-}
-
 static void	check_finished_eating(t_context *context, t_philo *philo)
 {
 	pthread_mutex_lock(&philo->times_eaten_lock);
@@ -38,21 +33,26 @@ static void	check_finished_eating(t_context *context, t_philo *philo)
 
 // even philosophers: right fork first
 // odd philosophers: left fork first
+static void	choose_fork(t_philo *philo, int *first, int *second)
+{
+	if (philo->id % 2 == 0)
+	{
+		*first = philo->r_fork;
+		*second = philo->l_fork;
+	}
+	else
+	{
+		*first = philo->l_fork;
+		*second = philo->r_fork;
+	}
+}
+
 static void	ft_eat(t_philo *philo, t_context *context)
 {
 	int		first_fork;
 	int		second_fork;
 
-	if (philo->id % 2 == 0)
-	{
-		first_fork = philo->r_fork;
-		second_fork = philo->l_fork;
-	}
-	else
-	{
-		first_fork = philo->l_fork;
-		second_fork = philo->r_fork;
-	}
+	choose_fork(philo, &first_fork, &second_fork);
 	pthread_mutex_lock(&context->fork_locks[first_fork]);
 	context->forks[first_fork] = 1;
 	print_message(context, philo->id, FORK);
@@ -78,22 +78,13 @@ void	*routine(void *arg)
 	philo = (t_philo *)arg;
 	while (!check_finished(philo->context))
 	{
-		ft_think(philo, philo->context);
-		if (philo->id % 2 == 1 &&
-				ft_gettime() < philo->context->start_ts + (philo->context->ms_eat / philo->context->n_philos))
+		print_message(philo->context, philo->id, THINK);
+		if (philo->id % 2 == 1
+			&& ft_gettime() < philo->context->start_ts
+			+ (philo->context->ms_eat / philo->context->n_philos))
 			ft_usleep(20, NULL);
 		ft_eat(philo, philo->context);
 		ft_sleep(philo, philo->context);
 	}
 	return (NULL);
-}
-
-// to avoid a dead lock with the death_thread, for a single philo 
-// we have to simulate its simulation 
-void	handle_one_philo(t_context *context)
-{
-	print_message(context, 1, THINK);
-	print_message(context, 1, FORK);
-	ft_usleep(context->ms_ttd, NULL);
-	print_message(context, 1, DEAD);
 }

@@ -57,17 +57,17 @@ void	*check_death(void *args)
 	{
 		i = 0;
 		while (i < context->n_philos)
-        {
-            pthread_mutex_lock(&philos[i].dying_time_lock);
-            if (ft_gettime() > philos[i].next_dying_time)
-            {
+		{
+			pthread_mutex_lock(&philos[i].dying_time_lock);
+			if (ft_gettime() > philos[i].next_dying_time)
+			{
 				pthread_mutex_unlock(&philos[i].dying_time_lock);
-                warn_end_simulation(philos[i]);
-                return (NULL);
-            }
-            pthread_mutex_unlock(&philos[i].dying_time_lock);
-            i++;
-        }
+				warn_end_simulation(philos[i]);
+				return (NULL);
+			}
+			pthread_mutex_unlock(&philos[i].dying_time_lock);
+			i++;
+		}
 	}
 	return (NULL);
 }
@@ -81,7 +81,8 @@ int	check_finished(t_context *context)
 		return (0);
 	pthread_mutex_lock(&context->death_lock);
 	pthread_mutex_lock(&context->n_philos_that_ate_n_eats_lock);
-	if (context->death || context->n_philos_that_ate_n_eats == context->n_philos)
+	if (context->death
+		|| context->n_philos_that_ate_n_eats == context->n_philos)
 		stop_flag = 1;
 	pthread_mutex_unlock(&context->n_philos_that_ate_n_eats_lock);
 	pthread_mutex_unlock(&context->death_lock);

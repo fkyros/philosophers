@@ -28,23 +28,18 @@ static int	ft_isspace(char c)
 	return (0);
 }
 
-int	ft_atoi(const char *nptr)
+long	ft_atoi(const char *nptr)
 {
-	int	res;
-	int	i;
-	int	sign;
+	long	res;
+	int		i;
 
-	sign = 1;
 	i = 0;
 	res = 0;
 	while (ft_isspace(nptr[i]))
 		i++;
 	if (nptr[i] == '-')
-	{
-		sign *= -1;
-		i++;
-	}
-	else if (nptr[i] == '+')
+		return (-1);
+	if (nptr[i] == '+')
 		i++;
 	while (ft_isdigit(nptr[i]))
 	{
@@ -52,32 +47,17 @@ int	ft_atoi(const char *nptr)
 		res += (nptr[i] - '0');
 		i++;
 	}
-	return (res * sign);
+	if (i > 11)
+		return (-1);
+	return (res);
 }
 
 // returns 1 if the given input as char* is NOT a natural number (>0)
-// (except for the fifth parameter)
-static int	is_nann(char *str, int pos)
-{
-	int	i;
-
-	if (!str)
-		return (1);
-	i = 0;
-	while (str[i])
-	{
-		if (!ft_isdigit(str[i]))
-			return (1);
-		i++;
-	}
-	if (pos != 5 && ft_atoi(str) == 0)
-		return (1);
-	return (0);
-}
-
+// or superior to MAX_INT
 int	check_philo_input(int argc, char **argv)
 {
 	int	i;
+	int	parsed_num;
 
 	if (argc < 5 || argc > 6)
 	{
@@ -89,7 +69,8 @@ int	check_philo_input(int argc, char **argv)
 	i = 1;
 	while (i < argc)
 	{
-		if (is_nann(argv[i], i))
+		parsed_num = ft_atoi(argv[i]);
+		if (parsed_num <= 0 || parsed_num > INT_MAX)
 		{
 			printf("Error: parameter %d with value \"%s\" must be a"
 				" natural number\n", i, argv[i]);

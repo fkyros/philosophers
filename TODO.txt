@@ -1,5 +1,3 @@
-- parser signos -> aceptar solo el +
-- parser numero mayor que MAX_INT -> error
 - estrutura del fichero de entrega
-- norminette
 - check if forbidden functions
+- ultima comprobación
