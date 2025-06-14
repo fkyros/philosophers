@@ -36,8 +36,8 @@ static void	check_finished_eating(t_context *context, t_philo *philo)
 	}
 }
 
-// Even philosophers: right fork first
-// Odd philosophers: left fork first
+// even philosophers: right fork first
+// odd philosophers: left fork first
 static void	ft_eat(t_philo *philo, t_context *context)
 {
 	int		first_fork;
@@ -76,14 +76,12 @@ void	*routine(void *arg)
 	t_philo		*philo;
 
 	philo = (t_philo *)arg;
-	//if (philo->id % 2 == 1)
-	//	ft_usleep(philo->context->ms_eat / 2, NULL);
 	while (!check_finished(philo->context))
 	{
 		ft_think(philo, philo->context);
 		if (philo->id % 2 == 1 &&
 				ft_gettime() < philo->context->start_ts + (philo->context->ms_eat / philo->context->n_philos))
-			ft_usleep((philo->context->ms_eat / 2), NULL);
+			ft_usleep(20, NULL);
 		ft_eat(philo, philo->context);
 		ft_sleep(philo, philo->context);
 	}

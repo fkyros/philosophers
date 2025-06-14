@@ -1,6 +1,5 @@
-- make principal parent to check if philos are dead
-	- if somene starves, it has to be the last message and finish completely the exection
-- implement fifth param check
-- free everything
+- parser signos -> aceptar solo el +
+- parser numero mayor que MAX_INT -> error
 - estrutura del fichero de entrega
+- norminette
 - check if forbidden functions

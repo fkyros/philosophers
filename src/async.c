@@ -68,7 +68,6 @@ void	*check_death(void *args)
             pthread_mutex_unlock(&philos[i].dying_time_lock);
             i++;
         }
-		ft_usleep(SLEEP_PING_MS, context);
 	}
 	return (NULL);
 }
