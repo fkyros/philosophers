@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/philosophers.h"
+#include "philosophers.h"
 
 // creates the philosophers and death monitor threads
 void	simulation(t_context *context, t_philo *philos)

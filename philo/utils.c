@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/philosophers.h"
+#include "philosophers.h"
 
 // if context != NULL, it stops microsleeping when someone is dead
 void	ft_usleep(int time, t_context *context)
