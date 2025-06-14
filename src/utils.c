@@ -12,12 +12,13 @@
 
 #include "../inc/philosophers.h"
 
-void	ft_usleep(int time)
+// if context != NULL, it stops microsleeping when someone is dead
+void	ft_usleep(int time, t_context *context)
 {
 	long	start_time;
 
 	start_time = ft_gettime();
-	while (ft_gettime() - start_time < time)
+	while (ft_gettime() - start_time < time && !check_finished(context))
 		usleep(SLEEP_PING_MS);
 	return ;
 }
@@ -37,16 +38,17 @@ void	print_message(t_context *context, int id, enum e_state state, long time)
 	if (!context)
 		return ;
 	pthread_mutex_lock(&context->output_lock);
-	if (state == FORK)
-		printf("%ld %d has taken a fork\n", time, id);
-	if (state == EAT)
-		printf("%ld %d is eating\n", time, id);
-	if (state == SLEEP)
-		printf("%ld %d is sleeping\n", time, id);
-	if (state == THINK)
-		printf("%ld %d is thinking\n", time, id);
-	if (state == DEAD)
-		printf("%ld %d died\n", time, id);
+	if (!check_finished(context))
+	{
+		if (state == FORK)
+			printf("%ld %d has taken a fork\n", time, id);
+		if (state == EAT)
+			printf("%ld %d is eating\n", time, id);
+		if (state == SLEEP)
+			printf("%ld %d is sleeping\n", time, id);
+		if (state == THINK)
+			printf("%ld %d is thinking\n", time, id);
+	}
 	pthread_mutex_unlock(&context->output_lock);
 }
 

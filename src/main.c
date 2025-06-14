@@ -25,8 +25,6 @@ int	main(int argc, char **argv)
 	philos = create_philos(context);
 	//if !philos
 	simulation(context, philos);
-	while (!check_finished(context))
-		ft_usleep(1000);
 	clear_context(philos, context);
 	return (0);
 }

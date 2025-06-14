@@ -83,7 +83,7 @@ int			ft_atoi(const char *nptr);
 // utils.c
 long		ft_gettime(void);
 void		print_message(t_context *context, int id, enum e_state state, long time);
-void		ft_usleep(int time);
+void		ft_usleep(int time, t_context *context);
 void		*ft_calloc(size_t count, size_t size);
 
 #endif

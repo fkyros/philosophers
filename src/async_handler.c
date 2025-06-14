@@ -25,8 +25,8 @@ static void	init_mutex_and_forks(t_context *context)
 		i++;
 	}
 	pthread_mutex_init(&context->output_lock, NULL);
-	pthread_mutex_init(&context->n_philos_that_ate_n_eats_lock, NULL);
 	pthread_mutex_init(&context->death_lock, NULL);
+	pthread_mutex_init(&context->n_philos_that_ate_n_eats_lock, NULL);
 }
 
 t_context	*init_context(int argc, char **argv)
@@ -67,7 +67,7 @@ t_philo	*create_philos(t_context *context)
 	}
 	while (i < context->n_philos)
 	{
-		philos[i].id = i;
+		philos[i].id = i + 1;
 		philos[i].l_fork = i;
 		philos[i].r_fork = i + 1;
 		if (i + 1 == context->n_philos)
@@ -91,12 +91,19 @@ void	clear_context(t_philo *philos, t_context *context)
 	while (i < context->n_philos)
 	{
 		pthread_join(philos[i].thread, NULL);
+		i++;
+	}
+	i = 0;
+	while (i < context->n_philos)
+	{
 		pthread_mutex_destroy(&context->fork_locks[i]);
 		i++;
 	}
-	pthread_mutex_destroy(&context->output_lock);
 	pthread_mutex_destroy(&context->n_philos_that_ate_n_eats_lock);
 	pthread_mutex_destroy(&context->death_lock);
+	pthread_mutex_destroy(&context->output_lock);
+	free(context->fork_locks);
+	free(context->forks);
+	free(philos);
 	free(context);
-	//TODO: FREE ARRAYS MALLOCS
 }

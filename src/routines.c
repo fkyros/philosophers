@@ -6,7 +6,7 @@
 /*   By: gade-oli <gade-oli@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 18:31:13 by gade-oli          #+#    #+#             */
-/*   Updated: 2025/06/14 16:18:22 by gade-oli         ###   ########.fr       */
+/*   Updated: 2025/06/14 17:56:19 by gade-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	ft_sleep(t_philo *philo, t_context *context)
 
 	time = ft_gettime() - context->start_ts;
 	print_message(context, philo->id, SLEEP, time);
-	ft_usleep(context->ms_sleep);
+	ft_usleep(context->ms_sleep, context);
 }
 
 static void	ft_think(t_philo *philo, t_context *context)
@@ -42,28 +42,42 @@ static void	check_finished_eating(t_context *context, t_philo *philo)
 	}
 }
 
+// Even philosophers: right fork first
+// Odd philosophers: left fork first
 static void	ft_eat(t_philo *philo, t_context *context)
 {
 	long	time;
+	int		first_fork;
+	int		second_fork;
 
-	pthread_mutex_lock(&context->fork_locks[philo->l_fork]);
+	if (philo->id % 2 == 0)
+	{
+		first_fork = philo->r_fork;
+		second_fork = philo->l_fork;
+	}
+	else
+	{
+		first_fork = philo->l_fork;
+		second_fork = philo->r_fork;
+	}
+	pthread_mutex_lock(&context->fork_locks[first_fork]);
 	time = ft_gettime() - context->start_ts;
-	context->forks[philo->l_fork] = 1;
+	context->forks[first_fork] = 1;
 	print_message(context, philo->id, FORK, time);
-	pthread_mutex_lock(&context->fork_locks[philo->r_fork]);
+	pthread_mutex_lock(&context->fork_locks[second_fork]);
 	time = ft_gettime() - context->start_ts;
 	print_message(context, philo->id, FORK, time);
-	context->forks[philo->r_fork] = 1;
+	context->forks[second_fork] = 1;
 	pthread_mutex_lock(&philo->dying_time_lock);
 	philo->next_dying_time = ft_gettime() + philo->context->ms_ttd;
 	pthread_mutex_unlock(&philo->dying_time_lock);
 	time = ft_gettime() - context->start_ts;
 	print_message(context, philo->id, EAT, time);
-	ft_usleep(philo->context->ms_eat);
-	context->forks[philo->l_fork] = 0;
-	context->forks[philo->r_fork] = 0;
-	pthread_mutex_unlock(&context->fork_locks[philo->l_fork]);
-	pthread_mutex_unlock(&context->fork_locks[philo->r_fork]);
+	ft_usleep(philo->context->ms_eat, context);
+	context->forks[first_fork] = 0;
+	context->forks[second_fork] = 0;
+	pthread_mutex_unlock(&context->fork_locks[second_fork]);
+	pthread_mutex_unlock(&context->fork_locks[first_fork]);
 	check_finished_eating(context, philo);
 }
 
@@ -73,7 +87,7 @@ void	*routine(void *arg)
 
 	philo = (t_philo *)arg;
 	if (philo->id % 2 == 1)
-		ft_usleep(50);
+		ft_usleep(50, NULL);
 	while (!check_finished(philo->context))
 	{
 		ft_think(philo, philo->context);
@@ -93,7 +107,7 @@ void	handle_one_philo(t_context *context)
 	print_message(context, 0, THINK, time);
 	time = ft_gettime() - context->start_ts;
 	print_message(context, 0, FORK, time);
-	ft_usleep(context->ms_ttd);
+	ft_usleep(context->ms_ttd, NULL);
 	time = ft_gettime() - context->start_ts;
 	print_message(context, 0, DEAD, time);
 }
