@@ -1,3 +1,6 @@
 - make principal parent to check if philos are dead
 	- if somene starves, it has to be the last message and finish completely the exection
 - implement fifth param check
+- free everything
+- estrutura del fichero de entrega
+- check if forbidden functions

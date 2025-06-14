@@ -6,7 +6,7 @@
 /*   By: gade-oli <gade-oli@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:06:21 by gade-oli          #+#    #+#             */
-/*   Updated: 2025/06/13 15:57:20 by gade-oli         ###   ########.fr       */
+/*   Updated: 2025/06/14 16:31:32 by gade-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	main(int argc, char **argv)
 	philos = create_philos(context);
 	//if !philos
 	simulation(context, philos);
+	while (!check_finished(context))
+		ft_usleep(1000);
 	clear_context(philos, context);
 	return (0);
 }

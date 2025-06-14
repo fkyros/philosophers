@@ -3,90 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   async.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gade-oli <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: gade-oli <gade-oli@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 19:27:34 by gade-oli          #+#    #+#             */
-/*   Updated: 2025/06/13 17:08:50 by gade-oli         ###   ########.fr       */
+/*   Updated: 2025/06/14 16:28:17 by gade-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosophers.h"
 
-static void	init_mutex(t_context *context)
-{
-	int	i;
-	int	n;
-
-	i = 0;
-	n = context->n_philos;
-	context->fork_locks = malloc(sizeof(pthread_mutex_t) * n);
-	if (!context)
-	{
-		write(STDERR_FILENO, "malloc error :(\n", 17);
-		return ;
-	}
-	while (i < n)
-	{
-		pthread_mutex_init(&context->fork_locks[i], NULL);
-		i++;
-	}
-	pthread_mutex_init(&context->output_lock, NULL);
-	pthread_mutex_init(&context->n_eats_lock, NULL);
-	pthread_mutex_init(&context->dead_lock, NULL);
-}
-
-t_context	*init_context(int argc, char **argv)
-{
-	t_context	*context;
-
-	context = malloc(sizeof(t_context));
-	if (!context)
-	{
-		write(STDERR_FILENO, "malloc error :(\n", 17);
-		return (NULL);
-	}
-	context->n_philos = ft_atoi(argv[1]);
-	context->ms_ttd = ft_atoi(argv[2]);
-	context->ms_eat = ft_atoi(argv[3]);
-	context->ms_sleep = ft_atoi(argv[4]);
-	if (argc == 6)
-		context->n_intakes = ft_atoi(argv[5]);
-	context->start_ts = ft_gettime();
-	init_mutex(context);
-	return (context);
-}
-
-t_philo	*create_philos(t_context *context)
-{
-	int	i;
-	t_philo	*philos;
-
-	i = 0;
-	philos = malloc(sizeof(t_philo) * context->n_philos);
-	if (!philos)
-	{
-		write(STDERR_FILENO, "malloc error :(\n", 17);
-		return (NULL);
-	}
-	while (i < context->n_philos)
-	{
-		philos[i].id = i;
-		philos[i].l_fork = i;
-		philos[i].r_fork = i + 1;
-		if (i + 1 == context->n_philos)
-			philos[i].r_fork = 0;
-		philos[i].last_meal_ts = ft_gettime() + context->ms_ttd;
-		philos[i].context = context;
-		i++;
-	}
-	return (philos);
-}
-
-// TODO: create monitor to check dead philos?
+// creates the philosophers and death monitor threads
 void	simulation(t_context *context, t_philo *philos)
 {
 	int	i;
 
+	if (context->n_philos == 1)
+	{
+		handle_one_philo(context);
+		return ;
+	}
+	pthread_create(&context->death_thread, NULL, &check_death, philos);
 	i = 0;
 	while (i < context->n_philos)
 	{
@@ -95,25 +31,57 @@ void	simulation(t_context *context, t_philo *philos)
 	}
 }
 
-static void	finish_philos(t_philo *philos, t_context *context)
+static void	warn_end_simulation(t_philo philo)
 {
-	int	i;
+	long	time;
 
-	i = 0;
-	while (i < context->n_philos)
-	{
-		pthread_join(philos[i].thread, NULL);
-		pthread_mutex_destroy(&context->fork_locks[i]);
-		i++;
-	}
+	time = ft_gettime() - philo.context->start_ts;
+	pthread_mutex_lock(&philo.context->death_lock);
+	philo.context->death = 1;
+	pthread_mutex_unlock(&philo.context->death_lock);
+	pthread_mutex_lock(&philo.context->output_lock);
+	print_message(philo.context, philo.id, DEAD, time);
+	pthread_mutex_unlock(&philo.context->output_lock);
 }
 
-//TODO: func to destroy mutexes and join threads
-void	clear_context(t_philo *philos, t_context *context)
+void	*check_death(void *args)
 {
-	finish_philos(philos, context);
-	pthread_mutex_destroy(&context->output_lock);
-	pthread_mutex_destroy(&context->n_eats_lock);
-	pthread_mutex_destroy(&context->dead_lock);
-	free(context);
+	int			i;
+	t_context	*context;
+	t_philo		*philos;
+
+	philos = (t_philo *)args;
+    context = philos[0].context;
+	while (!check_finished(context))
+	{
+		i = 0;
+		while (i < context->n_philos)
+        {
+            pthread_mutex_lock(&philos[i].dying_time_lock);
+            if (ft_gettime() > philos[i].next_dying_time)
+            {
+				pthread_mutex_unlock(&philos[i].dying_time_lock);
+                warn_end_simulation(philos[i]);
+                return (NULL);
+            }
+            pthread_mutex_unlock(&philos[i].dying_time_lock);
+            i++;
+        }
+		ft_usleep(500);
+	}
+	return (NULL);
+}
+
+int	check_finished(t_context *context)
+{
+	int	stop_flag;
+
+	stop_flag = 0;
+	pthread_mutex_lock(&context->death_lock);
+	pthread_mutex_lock(&context->n_philos_that_ate_n_eats_lock);
+	if (context->death || context->n_philos_that_ate_n_eats == context->n_philos)
+		stop_flag = 1;
+	pthread_mutex_unlock(&context->death_lock);
+	pthread_mutex_unlock(&context->n_philos_that_ate_n_eats_lock);
+	return (stop_flag);
 }

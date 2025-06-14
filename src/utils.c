@@ -6,7 +6,7 @@
 /*   By: gade-oli <gade-oli@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 13:43:36 by gade-oli          #+#    #+#             */
-/*   Updated: 2025/06/13 17:28:37 by gade-oli         ###   ########.fr       */
+/*   Updated: 2025/06/14 14:47:16 by gade-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_usleep(int time)
 
 	start_time = ft_gettime();
 	while (ft_gettime() - start_time < time)
-		usleep(500);
+		usleep(SLEEP_PING_MS);
 	return ;
 }
 
@@ -28,7 +28,7 @@ long	ft_gettime(void)
 	long			ms;
 
 	gettimeofday(&time, NULL);
-	ms = time.tv_sec * 1000 + time.tv_usec / 1000;
+	ms = time.tv_sec * MS_FACTOR + time.tv_usec / MS_FACTOR;
 	return (ms);
 }
 
@@ -48,4 +48,26 @@ void	print_message(t_context *context, int id, enum e_state state, long time)
 	if (state == DEAD)
 		printf("%ld %d died\n", time, id);
 	pthread_mutex_unlock(&context->output_lock);
+}
+
+static void	ft_bzero(void *s, size_t n)
+{
+	size_t	i;
+
+	i = -1;
+	while (++i < n)
+		((char *)s)[i] = '\0';
+}
+
+void	*ft_calloc(size_t count, size_t size)
+{
+	size_t			tam;
+	unsigned char	*res;
+
+	tam = size * count;
+	res = malloc((int)tam);
+	if (res == NULL)
+		return (NULL);
+	ft_bzero(res, tam);
+	return (res);
 }
