@@ -1,3 +1,0 @@
-- estrutura del fichero de entrega
-- check if forbidden functions
-- ultima comprobación

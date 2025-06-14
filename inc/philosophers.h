@@ -29,7 +29,6 @@ enum	e_state
 	EAT,
 	SLEEP,
 	THINK,
-	DEAD
 };
 
 typedef struct s_philo
